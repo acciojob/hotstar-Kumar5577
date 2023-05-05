@@ -16,13 +16,10 @@ public class ProductionHouseService {
     ProductionHouseRepository productionHouseRepository;
 
     public Integer addProductionHouseToDb(ProductionHouseEntryDto productionHouseEntryDto){
-        ProductionHouse productionHouse = new ProductionHouse();
+        ProductionHouse productionHouse = new ProductionHouse(productionHouseEntryDto.getName());
         productionHouse.setRatings(0);
-        productionHouse.setWebSeriesList(new ArrayList<>());
-        productionHouse.setName(productionHouseEntryDto.getName());
         productionHouseRepository.save(productionHouse);
-        int id = productionHouseRepository.findByName(productionHouseEntryDto.getName()).getId();
-        return id;
+        return productionHouseRepository.findByName(productionHouse.getName()).getId();
     }
 
 
