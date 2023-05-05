@@ -33,6 +33,7 @@ public class WebSeriesService {
        webSeries.setRating(webSeriesEntryDto.getRating());
        webSeries.setSubscriptionType(webSeriesEntryDto.getSubscriptionType());
        webSeries.setProductionHouse(productionHouse);
+       webSeries.setAgeLimit(webSeriesEntryDto.getAgeLimit());
        productionHouse.getWebSeriesList().add(webSeries);
        double rating =0;
        double ans =0;
