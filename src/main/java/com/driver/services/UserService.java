@@ -36,9 +36,10 @@ public class UserService {
         //Hint: Take out all the Webseries from the WebRepository
         List<WebSeries>webSeries = webSeriesRepository.findAll();
         User user = userRepository.findById(userId).get();
+        SubscriptionType subscriptionType = user.getSubscription().getSubscriptionType();
        int count =0;
        for (WebSeries webSeries1 :webSeries){
-           if (webSeries1.getSubscriptionType()==user.getSubscription().getSubscriptionType() && webSeries1.getAgeLimit()==user.getAge())
+           if (webSeries1.getSubscriptionType()==subscriptionType)
                count++;
        }
         return count;
