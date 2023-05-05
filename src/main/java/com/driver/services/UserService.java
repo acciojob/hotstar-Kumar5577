@@ -39,7 +39,7 @@ public class UserService {
         User user = userRepository.findById(userId).get();
        int count =0;
        for (WebSeries webSeries1 :webSeries){
-           if (webSeries1.getSubscriptionType()==user.getSubscription().getSubscriptionType() && webSeries1.getAgeLimit()>user.getAge())
+           if (webSeries1.getSubscriptionType()==user.getSubscription().getSubscriptionType() && webSeries1.getAgeLimit()==user.getAge())
                count++;
        }
         return count;
