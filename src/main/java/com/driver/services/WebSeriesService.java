@@ -28,7 +28,12 @@ public class WebSeriesService {
 
        if(webSeriesRepository.findBySeriesName(webSeriesEntryDto.getSeriesName())!=null)
            throw new Exception("Series is already present");
-       WebSeries webSeries = new WebSeries(webSeriesEntryDto.getSeriesName(),webSeriesEntryDto.getAgeLimit(),webSeriesEntryDto.getRating(),webSeriesEntryDto.getSubscriptionType());
+       WebSeries webSeries = new WebSeries();
+       webSeries.setSeriesName(webSeriesEntryDto.getSeriesName());
+       webSeries.setAgeLimit(webSeriesEntryDto.getAgeLimit());
+       webSeries.setProductionHouse(productionHouseRepository.findById(webSeriesEntryDto.getProductionHouseId()).get());
+       webSeries.setRating(webSeriesEntryDto.getRating());
+       webSeries.setSubscriptionType(webSeriesEntryDto.getSubscriptionType());
        webSeriesRepository.save(webSeries);
         List<WebSeries>webSeries1 = webSeriesRepository.findAll();
         double rating = 0;
@@ -39,8 +44,9 @@ public class WebSeriesService {
         rating = rating/totalSeries;
         ProductionHouse productionHouse = productionHouseRepository.findById(webSeriesEntryDto.getProductionHouseId()).get();
         productionHouse.setRatings(rating);
+        productionHouse.getWebSeriesList().add(webSeries);
         productionHouseRepository.save(productionHouse);
-        webSeriesRepository.save(webSeries);
+
         int id = webSeriesRepository.findBySeriesName(webSeriesEntryDto.getSeriesName()).getId();
         return id ;
     }

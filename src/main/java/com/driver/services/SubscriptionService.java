@@ -42,6 +42,10 @@ public class SubscriptionService {
             price = 1000 + 350*subscriptionEntryDto.getNoOfScreensRequired();
         subscription.setTotalAmountPaid(price);
         subscription.setStartSubscriptionDate(Date.from(Instant.now()));
+        User user = userRepository.findById(subscriptionEntryDto.getUserId()).get();
+        user.setSubscription(subscription);
+        subscription.setUser(user);
+        userRepository.save(user);
         subscriptionRepository.save(subscription);
         return price;
     }
@@ -55,19 +59,24 @@ public class SubscriptionService {
         Integer upgradeDifference = 0;
         if(user.getSubscription().getSubscriptionType()==SubscriptionType.ELITE)
             throw new Exception ("Already the best Subscription");
+        Subscription subscription = new Subscription();
         if (user.getSubscription().getSubscriptionType()==SubscriptionType.BASIC){
             upgradeDifference =(800 + user.getSubscription().getNoOfScreensSubscribed()*250) - user.getSubscription().getTotalAmountPaid();
-            user.getSubscription().setSubscriptionType(SubscriptionType.PRO);
-            user.getSubscription().setStartSubscriptionDate(Date.from(Instant.now()));
-            user.getSubscription().setTotalAmountPaid(800 + user.getSubscription().getNoOfScreensSubscribed()*250);
+            subscription.setSubscriptionType(SubscriptionType.PRO);
+            subscription.setStartSubscriptionDate(Date.from(Instant.now()));
+            subscription.setTotalAmountPaid(800 + user.getSubscription().getNoOfScreensSubscribed()*250);
+            subscription.setUser(user);
+
         }
         if (user.getSubscription().getSubscriptionType()==SubscriptionType.PRO){
             upgradeDifference =(1000 + user.getSubscription().getNoOfScreensSubscribed()*350) - user.getSubscription().getTotalAmountPaid();
-            user.getSubscription().setSubscriptionType(SubscriptionType.ELITE);
-            user.getSubscription().setStartSubscriptionDate(Date.from(Instant.now()));
-            user.getSubscription().setTotalAmountPaid(1000 + user.getSubscription().getNoOfScreensSubscribed()*350);
+            subscription.setSubscriptionType(SubscriptionType.ELITE);
+            subscription.setStartSubscriptionDate(Date.from(Instant.now()));
+            subscription.setTotalAmountPaid(1000 + user.getSubscription().getNoOfScreensSubscribed()*350);
+            subscription.setUser(user);
         }
-
+        user.setSubscription(subscription);
+        subscriptionRepository.save(subscription);
          userRepository.save(user);
 
         return upgradeDifference;
