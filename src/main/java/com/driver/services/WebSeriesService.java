@@ -24,31 +24,27 @@ public class WebSeriesService {
         //Add a webSeries to the database and update the ratings of the productionHouse
         //Incase the seriesName is already present in the Db throw Exception("Series is already present")
         //use function written in Repository Layer for the same
-        //Dont forget to save the production and webseries Repo
-
-       if(webSeriesRepository.findBySeriesName(webSeriesEntryDto.getSeriesName())!=null)
-           throw new Exception("Series is already present");
-        ProductionHouse productionHouse = productionHouseRepository.findById(webSeriesEntryDto.getProductionHouseId()).get();
+        //Don't forget to save the production and webseries Repo
+        if(webSeriesRepository.findBySeriesName(webSeriesEntryDto.getSeriesName())!=null)
+            throw new Exception("Series is already present");
+      ProductionHouse productionHouse = productionHouseRepository.findById(webSeriesEntryDto.getProductionHouseId()).get();
        WebSeries webSeries = new WebSeries();
        webSeries.setSeriesName(webSeriesEntryDto.getSeriesName());
-       webSeries.setAgeLimit(webSeriesEntryDto.getAgeLimit());
-       webSeries.setProductionHouse(productionHouse);
        webSeries.setRating(webSeriesEntryDto.getRating());
        webSeries.setSubscriptionType(webSeriesEntryDto.getSubscriptionType());
-       webSeriesRepository.save(webSeries);
-        List<WebSeries>webSeries1 = webSeriesRepository.findAll();
-        double rating = 0;
-        int totalSeries = webSeries1.size();
-        for(WebSeries webSeries2 :webSeries1){
-            rating+=webSeries2.getRating();
-        }
-        rating = rating/totalSeries;
-
-        productionHouse.setRatings(rating);
-        productionHouse.getWebSeriesList().add(webSeries);
-        productionHouseRepository.save(productionHouse);
-
-        int id = webSeriesRepository.findBySeriesName(webSeriesEntryDto.getSeriesName()).getId();
+       webSeries.setProductionHouse(productionHouse);
+       productionHouse.getWebSeriesList().add(webSeries);
+       double rating =0;
+       double ans =0;
+       List<WebSeries>webSeries1 = productionHouse.getWebSeriesList();
+       for(WebSeries webSeries2:webSeries1){
+           rating+=webSeries2.getRating();
+       }
+       ans = rating/webSeries1.size();
+    productionHouse.setRatings(ans);
+    ProductionHouse saved =productionHouseRepository.save(productionHouse);
+    webSeriesRepository.save(webSeries);
+        int id = saved.getId();
         return id ;
     }
 
