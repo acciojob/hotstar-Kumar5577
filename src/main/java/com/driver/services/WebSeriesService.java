@@ -8,6 +8,7 @@ import com.driver.repository.WebSeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,7 +35,13 @@ public class WebSeriesService {
        webSeries.setSubscriptionType(webSeriesEntryDto.getSubscriptionType());
        webSeries.setProductionHouse(productionHouse);
        webSeries.setAgeLimit(webSeriesEntryDto.getAgeLimit());
+       if (productionHouse.getWebSeriesList()==null){
+           List<WebSeries> webSeries1 = new ArrayList<>();
+           webSeries1.add(webSeries);
+           productionHouse.setWebSeriesList(webSeries1);
+       }
        productionHouse.getWebSeriesList().add(webSeries);
+
        double rating =0;
        double ans =0;
        List<WebSeries>webSeries1 = productionHouse.getWebSeriesList();
